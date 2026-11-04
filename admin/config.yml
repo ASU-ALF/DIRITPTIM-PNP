@@ -1,0 +1,72 @@
+backend:
+  name: github
+  repo: ASU-ALF/DIRITPTIM-PNP
+  branch: main
+  auth_scope: repo
+  open_authoring: true
+
+publish_mode: editorial_workflow
+locale: es
+media_folder: media/uploads
+public_folder: /media/uploads
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+collections:
+  - name: contenido
+    label: Contenido del sitio
+    description: Las publicaciones nuevas quedan en revisión hasta que un administrador las apruebe.
+    files:
+      - name: pagina
+        label: Noticias, operativos, casos y videos
+        file: data/site-content.json
+        format: json
+        fields:
+          - label: Noticias y comunicados
+            name: news
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: Título, name: title, widget: string }
+              - { label: Fecha, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+              - { label: Resumen público, name: summary, widget: text }
+              - { label: Imagen autorizada, name: image, widget: image, required: false }
+              - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
+              - { label: Enlace al comunicado oficial, name: sourceUrl, widget: string, required: false }
+          - label: Operativos realizados
+            name: operations
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: Título, name: title, widget: string }
+              - { label: Fecha, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+              - { label: Región, name: region, widget: string }
+              - { label: Resumen aprobado para difusión, name: summary, widget: text }
+              - { label: Imagen autorizada, name: image, widget: image, required: false }
+              - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
+          - label: Casos resueltos
+            name: cases
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: Título público, name: title, widget: string }
+              - { label: Fecha de publicación, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+              - { label: Resumen aprobado, name: summary, widget: text }
+              - { label: Imagen autorizada y anonimizada, name: image, widget: image, required: false }
+              - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
+          - label: Videos
+            name: videos
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}}'
+            fields:
+              - { label: Título, name: title, widget: string }
+              - { label: Resumen, name: summary, widget: text }
+              - { label: Enlace público del video institucional, name: videoUrl, widget: string }
+
+

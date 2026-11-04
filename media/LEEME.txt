@@ -1,0 +1,4 @@
+Coloca aquí las fotografías institucionales autorizadas que vayas a mostrar.
+Ejemplo de nombre: operativo-001.jpg
+Después sigue los pasos de SUBIR_IMAGENES_VIDEOS.md para enlazar cada archivo desde index.html.
+No guardes aquí información personal ni imágenes sensibles.
