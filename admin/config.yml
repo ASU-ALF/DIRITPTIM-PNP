@@ -2,7 +2,7 @@ backend:
   name: github
   repo: ASU-ALF/DIRITPTIM-PNP
   branch: main
-  auth_scope: repo
+  auth_scope: public_repo
   open_authoring: true
 
 publish_mode: editorial_workflow
