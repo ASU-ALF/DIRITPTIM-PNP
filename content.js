@@ -78,6 +78,103 @@
       return /^[A-Za-z0-9_-]{6,20}$/.test(id) ? 'https://www.youtube-nocookie.com/embed/' + id : '';
     } catch (_) { return ''; }
   }
+  const safeContentUrl = (raw) => {
+    if (!raw) return '';
+    try {
+      const url = new URL(raw, window.location.origin);
+      if (url.protocol === 'https:' || (url.protocol === 'http:' && url.origin === window.location.origin)) return url.href;
+    } catch (_) { /* omite URL inválidas */ }
+    return '';
+  };
+  const showAnnouncement = (announcement) => {
+    if (!announcement || announcement.enabled !== true) return;
+    const titleText = (announcement.title || '').trim();
+    const messageText = (announcement.message || '').trim();
+    if (!titleText && !messageText) return;
+    try {
+      if (window.sessionStorage.getItem('diritptim-pnp-announcement-dismissed') === '1') return;
+    } catch (_) { /* continúa si el navegador bloquea el almacenamiento */ }
+
+    const previousFocus = document.activeElement;
+    const overlay = make('div', 'announcement-overlay');
+    const dialog = make('section', 'announcement-dialog');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-labelledby', 'announcement-title');
+    dialog.setAttribute('aria-describedby', 'announcement-message');
+    dialog.tabIndex = -1;
+
+    const closeButton = make('button', 'announcement-close', '×');
+    closeButton.type = 'button';
+    closeButton.setAttribute('aria-label', 'Cerrar aviso');
+    const close = () => {
+      try { window.sessionStorage.setItem('diritptim-pnp-announcement-dismissed', '1'); } catch (_) { /* no bloquea el cierre */ }
+      overlay.remove();
+      document.body.classList.remove('announcement-open');
+      if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+    };
+    closeButton.addEventListener('click', close);
+    dialog.append(closeButton, make('span', 'announcement-kicker', 'AVISO IMPORTANTE'));
+
+    const heading = make('h2', '', titleText || 'Aviso institucional');
+    heading.id = 'announcement-title';
+    const message = make('p', '', messageText);
+    message.id = 'announcement-message';
+    dialog.append(heading, message);
+
+    const imageUrl = safeContentUrl(announcement.image);
+    if (imageUrl) {
+      const image = make('img');
+      image.src = imageUrl;
+      image.alt = announcement.imageAlt || '';
+      image.loading = 'eager';
+      dialog.append(image);
+    }
+
+    const buttonUrl = safeContentUrl(announcement.buttonUrl);
+    const buttonText = (announcement.buttonText || '').trim();
+    if (buttonUrl && buttonText) {
+      const action = make('a', 'btn gold announcement-action', buttonText);
+      action.href = buttonUrl;
+      if (new URL(buttonUrl).origin !== window.location.origin) {
+        action.target = '_blank';
+        action.rel = 'noopener noreferrer';
+      }
+      dialog.append(action);
+    }
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key === 'Tab') {
+        const focusable = Array.from(dialog.querySelectorAll('button:not([disabled]), a[href]'));
+        if (!focusable.length) {
+          event.preventDefault();
+          dialog.focus();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) close();
+    });
+    overlay.append(dialog);
+    document.body.append(overlay);
+    document.body.classList.add('announcement-open');
+    closeButton.focus();
+  };
   const render = (targetId, entries, label, options = {}, emptyText = 'Próximamente se publicará contenido aprobado.') => {
     const target = byId(targetId);
     if (!target) return;
@@ -94,6 +191,7 @@
   fetch('/data/site-content.json', { cache: 'no-store' })
     .then((response) => { if (!response.ok) throw new Error('No se pudo leer el contenido'); return response.json(); })
     .then((data) => {
+      showAnnouncement(data.announcement);
       const newsItems = Array.isArray(data.news) ? data.news.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)) : [];
       render('news-feed', newsItems, 'COMUNICADO OFICIAL', { sortByDate: true, limit: 3, link: true }, 'Las nuevas noticias aprobadas aparecerán aquí.');
       if (newsItems.length) {

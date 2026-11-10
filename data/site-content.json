@@ -1,4 +1,13 @@
 {
+  "announcement": {
+    "enabled": false,
+    "title": "",
+    "message": "",
+    "image": "",
+    "imageAlt": "",
+    "buttonText": "",
+    "buttonUrl": ""
+  },
   "news": [],
   "operations": [],
   "cases": [],
