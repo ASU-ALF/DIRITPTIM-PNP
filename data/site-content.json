@@ -1,12 +1,5 @@
 {
-  "news": [
-    {
-      "title": "PRUEBA",
-      "date": "2026-11-10",
-      "summary": "GOLPE A TREN DE ARAGUA",
-      "image": "/media/uploads/sssss.png"
-    }
-  ],
+  "news": [],
   "operations": [],
   "cases": [],
   "videos": []
