@@ -1,0 +1,28 @@
+ACTUALIZACIÓN: CONTACTOS Y MATERIALES ADMINISTRABLES
+
+Incluye el logo como marca de agua, bienvenida y edición desde el panel de estas secciones:
+- Aviso de peligro inmediato de la portada.
+- Contactos de emergencia: teléfono, correo, enlace oficial, descripción y nota de verificación.
+- Punto de consultas: texto y canales de atención.
+- Materiales para compartir: título, descripción, guía principal y nuevos archivos para descargar.
+
+IMPORTANTE: No incluye data/site-content.json. Así conserva las noticias, operativos, casos, videos y demás contenido ya publicado.
+
+PUBLICAR LA ACTUALIZACIÓN
+1. Abre GitHub Desktop y selecciona DIRITPTIM-PNP.
+2. En Repository > Show in Explorer, abre la carpeta principal del repositorio.
+3. Extrae este ZIP y copia index.html, content.js, logo-fondo.jpg y logo-fondo.svg a la carpeta principal. Acepta reemplazar index.html y content.js.
+4. Copia la carpeta admin del ZIP a la carpeta principal y acepta reemplazar config.yml.
+5. No reemplaces ni borres data/site-content.json ni los archivos que ya subiste en media/uploads.
+6. En GitHub Desktop, escribe el resumen Actualizar contactos y materiales. Pulsa Commit to main y después Push origin.
+7. Espera a que Netlify muestre Published. Actualiza la página con Ctrl+F5.
+
+EDITAR DESDE EL PANEL
+1. Entra a https://diritptim-pnp.netlify.app/admin/ e inicia sesión.
+2. Abre Contenido y la colección Secciones y publicaciones del sitio.
+3. Expande el bloque que quieras cambiar: Aviso de peligro inmediato, Contactos de emergencia, Punto de consultas o Materiales para compartir y descargar.
+4. En contactos, agrega un elemento y completa únicamente teléfonos, correos y enlaces oficiales ya confirmados. Si no hay un dato confirmado, deja el campo vacío: el sitio no mostrará un botón de llamada o contacto activo.
+5. En materiales, agrega un elemento, llena el título y la descripción y sube el archivo con el selector. PDF es el formato recomendado. También puedes poner un enlace HTTPS institucional. Al publicar, el botón de la tarjeta permite descargar el archivo.
+6. Guarda y publica/aprueba el cambio según el flujo editorial del panel. Espera la publicación automática de Netlify.
+
+Los archivos subidos desde el CMS se guardan en media/uploads del repositorio GitHub y se publican con el sitio. Evita subir datos personales, imágenes no autorizadas o material sensible de víctimas. Para videos grandes, usa el canal oficial de YouTube y agrega el enlace.

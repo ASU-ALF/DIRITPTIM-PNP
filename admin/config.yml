@@ -17,14 +17,110 @@ slug:
 collections:
   - name: contenido
     label: Contenido del sitio
-    description: Las publicaciones nuevas quedan en revisión hasta que un administrador las apruebe.
+    description: Edita avisos, contactos, consultas, materiales y publicaciones. Los cambios siguen el flujo editorial configurado.
     files:
       - name: pagina
-        label: Noticias, operativos, casos y videos
+        label: Secciones y publicaciones del sitio
         file: data/site-content.json
         format: json
         fields:
-          - label: Aviso emergente al visitar la página
+          - label: Mensaje de bienvenida
+            name: welcome
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar bienvenida, name: enabled, widget: boolean, default: true }
+              - { label: Título, name: title, widget: string, default: 'Bienvenido/a a DIRITPTIM PNP' }
+              - { label: Mensaje, name: message, widget: text, required: false, default: 'Este espacio reúne información de prevención, orientación y publicaciones institucionales autorizadas sobre la trata de personas. Si alguien está en peligro inmediato, comunícate con los canales oficiales de emergencia.' }
+              - { label: Texto del botón, name: buttonText, widget: string, default: 'Conoce las señales de alerta' }
+              - { label: Destino del botón, name: buttonUrl, widget: string, default: '#reconocer' }
+          - label: Aviso de peligro inmediato en la portada
+            name: emergencyNotice
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar aviso, name: enabled, widget: boolean, default: true }
+              - { label: Título, name: title, widget: string, default: 'Si alguien está en peligro inmediato' }
+              - { label: Mensaje, name: message, widget: text, default: 'Contacta a los servicios de emergencia o a la autoridad policial por los canales oficiales vigentes. No confrontes a posibles tratantes ni pongas en riesgo tu seguridad.' }
+          - label: Contactos de emergencia
+            name: emergencyContacts
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar sección, name: enabled, widget: boolean, default: true }
+              - { label: Título, name: title, widget: string, default: 'Contactos de emergencia' }
+              - { label: Texto introductorio, name: intro, widget: text, default: 'Guarda y comparte únicamente los números confirmados por las autoridades competentes.' }
+              - label: Canales oficiales
+                name: items
+                widget: list
+                collapsed: true
+                summary: '{{fields.title}}'
+                fields:
+                  - { label: Categoría, name: category, widget: string, default: 'ATENCIÓN' }
+                  - { label: Nombre del canal, name: title, widget: string }
+                  - { label: Descripción, name: description, widget: text, required: false }
+                  - { label: Teléfono confirmado (solo se activa al ingresarlo), name: phone, widget: string, required: false }
+                  - { label: Correo institucional confirmado, name: email, widget: string, required: false }
+                  - { label: Enlace HTTPS oficial (opcional), name: url, widget: string, required: false }
+                  - { label: Texto del botón, name: buttonText, widget: string, required: false }
+              - { label: Título de la nota inferior, name: noteTitle, widget: string, default: 'Antes de difundir' }
+              - { label: Nota inferior, name: noteMessage, widget: text, default: 'Completar teléfonos, horarios, cobertura y finalidad de cada línea, con validación institucional.' }
+          - label: Punto de consultas
+            name: consultations
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar sección, name: enabled, widget: boolean, default: true }
+              - { label: Título, name: title, widget: string, default: 'Punto de consultas' }
+              - { label: Texto introductorio, name: intro, widget: text, required: false }
+              - label: Canales y bloques informativos
+                name: items
+                widget: list
+                collapsed: true
+                summary: '{{fields.title}}'
+                fields:
+                  - { label: Categoría, name: category, widget: string, default: 'ORIENTACIÓN' }
+                  - { label: Título, name: title, widget: string }
+                  - { label: Descripción, name: description, widget: text, required: false }
+                  - { label: Teléfono institucional confirmado, name: phone, widget: string, required: false }
+                  - { label: Correo institucional confirmado, name: email, widget: string, required: false }
+                  - { label: Enlace HTTPS de consulta (opcional), name: url, widget: string, required: false }
+                  - { label: Texto del botón, name: buttonText, widget: string, required: false }
+              - { label: Título de la nota inferior, name: noteTitle, widget: string, default: 'Dato por completar antes de publicar' }
+              - { label: Nota inferior, name: noteMessage, widget: text, default: 'Confirma el canal, horario, tiempo de respuesta y si atiende emergencias. Esta página no recibe consultas.' }
+          - label: Materiales para compartir y descargar
+            name: materialsSection
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar sección, name: enabled, widget: boolean, default: true }
+              - { label: Título, name: title, widget: string, default: 'Materiales para compartir' }
+              - { label: Texto introductorio, name: intro, widget: text, default: 'Guías y recursos institucionales para descargar y compartir.' }
+              - label: Guía principal
+                name: featuredGuide
+                widget: object
+                collapsed: true
+                fields:
+                  - { label: Mostrar guía principal, name: enabled, widget: boolean, default: true }
+                  - { label: Categoría, name: category, widget: string, default: 'GUÍA INFORMATIVA' }
+                  - { label: Título, name: title, widget: string, default: 'Señales de alerta y cómo actuar' }
+                  - { label: Descripción, name: description, widget: text, default: 'Resumen imprimible con recomendaciones generales y pautas para proteger la privacidad.' }
+                  - { label: Archivo nuevo para descargar (opcional), name: file, widget: file, required: false }
+                  - { label: Ruta o enlace HTTPS del recurso actual, name: url, widget: string, default: '/guia-prevencion.html', required: false }
+                  - { label: Texto del botón, name: buttonText, widget: string, default: 'Descargar guía' }
+              - label: Agregar otros materiales (PDF recomendado)
+                name: items
+                widget: list
+                collapsed: true
+                summary: '{{fields.title}}'
+                fields:
+                  - { label: Categoría o público, name: category, widget: string, default: 'MATERIAL INFORMATIVO' }
+                  - { label: Título, name: title, widget: string }
+                  - { label: Descripción breve, name: description, widget: text, required: false }
+                  - { label: Archivo a subir, name: file, widget: file, required: false }
+                  - { label: Enlace HTTPS alternativo, name: url, widget: string, required: false }
+                  - { label: Texto del botón, name: buttonText, widget: string, required: false, default: 'Descargar material' }
+          - label: Aviso destacado (se muestra en lugar de la bienvenida mientras esté activo)
             name: announcement
             widget: object
             collapsed: true

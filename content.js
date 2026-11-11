@@ -93,7 +93,14 @@
     } catch (_) { /* omite URL inválidas */ }
     return '';
   };
-  const showAnnouncement = (announcement) => {
+  const defaultWelcome = {
+    enabled: true,
+    title: 'Bienvenido/a a DIRITPTIM PNP',
+    message: 'Este espacio reúne información de prevención, orientación y publicaciones institucionales autorizadas sobre la trata de personas. Si alguien está en peligro inmediato, comunícate con los canales oficiales de emergencia.',
+    buttonText: 'Conoce las señales de alerta',
+    buttonUrl: '#reconocer'
+  };
+  const showAnnouncement = (announcement, kicker = 'AVISO IMPORTANTE') => {
     if (!announcement || announcement.enabled !== true) return;
     const titleText = (announcement.title || '').trim();
     const messageText = (announcement.message || '').trim();
@@ -121,7 +128,7 @@
       if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
     };
     closeButton.addEventListener('click', close);
-    dialog.append(closeButton, make('span', 'announcement-kicker', 'AVISO IMPORTANTE'));
+    dialog.append(closeButton, make('span', 'announcement-kicker', kicker));
 
     const heading = make('h2', '', titleText || 'Aviso institucional');
     heading.id = 'announcement-title';
@@ -215,10 +222,149 @@
     }
     for (const item of items) target.append(card(item, label, options));
   };
+  const setCopy = (id, value) => {
+    const target = byId(id);
+    if (target && typeof value === 'string') target.textContent = value;
+  };
+  const renderContactCards = (targetId, entries, emptyText) => {
+    const target = byId(targetId);
+    if (!target || !Array.isArray(entries)) return;
+    target.replaceChildren();
+    if (!entries.length) {
+      target.append(make('p', 'empty-feed', emptyText));
+      return;
+    }
+    for (const entry of entries) {
+      const article = make('article', 'card');
+      article.append(make('span', 'num', entry.category || 'CANAL INSTITUCIONAL'));
+      article.append(make('h3', '', entry.title || 'Canal de atención'));
+      if (entry.description) article.append(make('p', '', entry.description));
+      const phone = String(entry.phone || '').trim();
+      const digits = phone.replace(/\D/g, '');
+      const email = String(entry.email || '').trim();
+      let href = '';
+      let actionText = String(entry.buttonText || '').trim();
+      if (phone && /^\d{3,15}$/.test(digits)) {
+        href = 'tel:' + digits;
+        article.append(make('p', 'contact-phone', phone));
+        if (!actionText) actionText = 'Llamar';
+      } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        href = 'mailto:' + email;
+        article.append(make('p', 'contact-phone', email));
+        if (!actionText) actionText = 'Enviar correo';
+      } else {
+        href = safeContentUrl(entry.url);
+        if (!actionText) actionText = 'Abrir canal oficial ↗';
+      }
+      if (href) {
+        const action = make('a', 'btn gold contact-action', actionText);
+        action.href = href;
+        if (href.startsWith('https://') && new URL(href).origin !== window.location.origin) {
+          action.target = '_blank';
+          action.rel = 'noopener noreferrer';
+        }
+        article.append(action);
+      } else {
+        article.append(make('span', 'tag', 'Canal por confirmar'));
+      }
+      target.append(article);
+    }
+  };
+  const renderContactSection = (data, key, sectionId, titleId, introId, feedId, noteTitleId, noteMessageId, emptyText) => {
+    const settings = data[key];
+    const section = byId(sectionId);
+    if (!settings || typeof settings !== 'object' || !section) return;
+    if (settings.enabled === false) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    if (Object.hasOwn(settings, 'title')) setCopy(titleId, String(settings.title || ''));
+    if (Object.hasOwn(settings, 'intro')) setCopy(introId, String(settings.intro || ''));
+    renderContactCards(feedId, settings.items, emptyText);
+    const noteTitle = byId(noteTitleId);
+    const noteMessage = byId(noteMessageId);
+    const note = noteTitle ? noteTitle.closest('.notice') : null;
+    if (note && (Object.hasOwn(settings, 'noteTitle') || Object.hasOwn(settings, 'noteMessage'))) {
+      if (Object.hasOwn(settings, 'noteTitle')) noteTitle.textContent = String(settings.noteTitle || '');
+      if (Object.hasOwn(settings, 'noteMessage') && noteMessage) noteMessage.textContent = String(settings.noteMessage || '');
+      note.hidden = !((noteTitle && noteTitle.textContent.trim()) || (noteMessage && noteMessage.textContent.trim()));
+    }
+  };
+  const materialCard = (entry, fallbackLabel = 'MATERIAL INFORMATIVO') => {
+    const article = make('article', 'card');
+    article.append(make('span', 'num', entry.category || fallbackLabel));
+    article.append(make('h3', '', entry.title || 'Material informativo'));
+    if (entry.description) article.append(make('p', '', entry.description));
+    const fileUrl = safeContentUrl(entry.file);
+    const externalUrl = safeContentUrl(entry.url);
+    const resourceUrl = fileUrl || externalUrl;
+    if (resourceUrl) {
+      const text = String(entry.buttonText || (fileUrl ? 'Descargar material' : 'Abrir recurso ↗')).trim();
+      const action = make('a', 'btn gold contact-action', text || 'Descargar material');
+      action.href = resourceUrl;
+      if (fileUrl && new URL(fileUrl).origin === window.location.origin) action.download = '';
+      else {
+        action.target = '_blank';
+        action.rel = 'noopener noreferrer';
+      }
+      article.append(action);
+    } else {
+      article.append(make('span', 'tag', 'Archivo por cargar'));
+    }
+    return article;
+  };
+  const renderMaterialsSection = (data) => {
+    const settings = data.materialsSection;
+    const section = byId('materiales');
+    const target = byId('materials-feed');
+    if (!settings || typeof settings !== 'object' || !section || !target) return;
+    if (settings.enabled === false) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    if (Object.hasOwn(settings, 'title')) setCopy('materials-title', String(settings.title || ''));
+    if (Object.hasOwn(settings, 'intro')) setCopy('materials-intro', String(settings.intro || ''));
+    target.replaceChildren();
+    const guide = settings.featuredGuide && typeof settings.featuredGuide === 'object' ? settings.featuredGuide : {
+      enabled: true,
+      category: 'GUÍA INFORMATIVA',
+      title: 'Señales de alerta y cómo actuar',
+      description: 'Resumen imprimible con recomendaciones generales y pautas para proteger la privacidad.',
+      file: '/guia-prevencion.html',
+      buttonText: 'Descargar guía'
+    };
+    if (guide.enabled !== false) target.append(materialCard(guide, 'GUÍA INFORMATIVA'));
+    const items = Array.isArray(settings.items) ? settings.items : [];
+    for (const item of items) target.append(materialCard(item));
+    if (!target.children.length) target.append(make('p', 'empty-feed', 'Todavía no hay materiales publicados. Puedes agregarlos desde el panel de administración.'));
+  };
+  const renderEmergencyNotice = (settings) => {
+    const notice = byId('emergency-notice');
+    if (!settings || typeof settings !== 'object' || !notice) return;
+    if (settings.enabled === false) {
+      notice.hidden = true;
+      return;
+    }
+    notice.hidden = false;
+    if (Object.hasOwn(settings, 'title')) setCopy('emergency-notice-title', String(settings.title || ''));
+    if (Object.hasOwn(settings, 'message')) setCopy('emergency-notice-message', String(settings.message || ''));
+  };
   fetch('/data/site-content.json', { cache: 'no-store' })
     .then((response) => { if (!response.ok) throw new Error('No se pudo leer el contenido'); return response.json(); })
     .then((data) => {
-      showAnnouncement(data.announcement);
+      const hasActiveAnnouncement = data.announcement && data.announcement.enabled === true && ((data.announcement.title || '').trim() || (data.announcement.message || '').trim());
+      if (hasActiveAnnouncement) {
+        showAnnouncement(data.announcement);
+      } else {
+        const welcome = data.welcome && typeof data.welcome === 'object' ? data.welcome : defaultWelcome;
+        showAnnouncement(welcome, 'BIENVENIDO/A');
+      }
+      renderEmergencyNotice(data.emergencyNotice);
+      renderContactSection(data, 'emergencyContacts', 'emergencias', 'emergency-contacts-title', 'emergency-contacts-intro', 'emergency-contacts-feed', 'emergency-contacts-note-title', 'emergency-contacts-note-message', 'Los contactos oficiales aparecerán aquí cuando se agreguen desde el panel.');
+      renderContactSection(data, 'consultations', 'consultas', 'consultations-title', 'consultations-intro', 'consultations-feed', 'consultations-note-title', 'consultations-note-message', 'Los canales de consulta aparecerán aquí cuando se agreguen desde el panel.');
+      renderMaterialsSection(data);
       showWhatsAppButton(data.whatsapp);
       const newsItems = Array.isArray(data.news) ? data.news.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)) : [];
       render('news-feed', newsItems, 'COMUNICADO OFICIAL', { sortByDate: true, limit: 3, link: true }, 'Las nuevas noticias aprobadas aparecerán aquí.');
