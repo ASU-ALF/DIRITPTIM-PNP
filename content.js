@@ -30,6 +30,13 @@
       article.append(place);
     }
     if (entry.summary) article.append(make('p', '', entry.summary));
+    const fullDetails = typeof entry.details === 'string' ? entry.details.trim() : '';
+    if (fullDetails) {
+      const disclosure = make('details', 'card-details');
+      disclosure.append(make('summary', '', 'Leer más'));
+      disclosure.append(make('p', 'card-details-body', fullDetails));
+      article.append(disclosure);
+    }
     if (link && entry.sourceUrl) {
       try {
         const url = new URL(entry.sourceUrl);
@@ -175,6 +182,26 @@
     document.body.classList.add('announcement-open');
     closeButton.focus();
   };
+  const showWhatsAppButton = (settings) => {
+    if (!settings || settings.enabled !== true) return;
+    const phone = String(settings.phone || '').replace(/\D/g, '');
+    if (!/^\d{8,15}$/.test(phone)) return;
+    const initialMessage = 'Hola, deseo orientación general sobre prevención de la trata de personas. No compartiré datos personales ni información urgente por este chat.';
+    const link = make('a', 'whatsapp-float');
+    link.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(initialMessage);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.setAttribute('aria-label', 'WhatsApp institucional para consultas generales. No es un canal de emergencia.');
+    link.title = 'Consultas generales. No es un canal de emergencia ni de denuncia confidencial.';
+    const icon = make('span', 'whatsapp-icon', '☎');
+    icon.setAttribute('aria-hidden', 'true');
+    const copy = make('span', 'whatsapp-copy');
+    copy.append(make('span', 'whatsapp-label', 'WhatsApp · consultas generales'));
+    const hours = (settings.hours || '').trim();
+    if (hours) copy.append(make('small', 'whatsapp-hours', 'Horario: ' + hours));
+    link.append(icon, copy);
+    document.body.append(link);
+  };
   const render = (targetId, entries, label, options = {}, emptyText = 'Próximamente se publicará contenido aprobado.') => {
     const target = byId(targetId);
     if (!target) return;
@@ -192,6 +219,7 @@
     .then((response) => { if (!response.ok) throw new Error('No se pudo leer el contenido'); return response.json(); })
     .then((data) => {
       showAnnouncement(data.announcement);
+      showWhatsAppButton(data.whatsapp);
       const newsItems = Array.isArray(data.news) ? data.news.slice().sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0)) : [];
       render('news-feed', newsItems, 'COMUNICADO OFICIAL', { sortByDate: true, limit: 3, link: true }, 'Las nuevas noticias aprobadas aparecerán aquí.');
       if (newsItems.length) {

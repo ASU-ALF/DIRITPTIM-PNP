@@ -36,6 +36,14 @@ collections:
               - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
               - { label: Texto del botón (opcional), name: buttonText, widget: string, required: false }
               - { label: Enlace del botón (opcional), name: buttonUrl, widget: string, required: false }
+          - label: Botón flotante de WhatsApp institucional
+            name: whatsapp
+            widget: object
+            collapsed: true
+            fields:
+              - { label: Mostrar botón, name: enabled, widget: boolean, default: false }
+              - { label: Número institucional autorizado (código de país y número, solo dígitos), name: phone, widget: string, required: false }
+              - { label: Horario de atención, name: hours, widget: string, required: false }
           - label: Noticias y comunicados
             name: news
             widget: list
@@ -45,6 +53,7 @@ collections:
               - { label: Título, name: title, widget: string }
               - { label: Fecha, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
               - { label: Resumen público, name: summary, widget: text }
+              - { label: Detalle ampliado para leer la publicación (opcional), name: details, widget: text, required: false }
               - { label: Imagen autorizada, name: image, widget: image, required: false }
               - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
               - { label: Enlace al comunicado oficial, name: sourceUrl, widget: string, required: false }
@@ -58,6 +67,7 @@ collections:
               - { label: Fecha, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
               - { label: Región, name: region, widget: string }
               - { label: Resumen aprobado para difusión, name: summary, widget: text }
+              - { label: Detalle ampliado para leer la publicación (opcional), name: details, widget: text, required: false }
               - { label: Imagen autorizada, name: image, widget: image, required: false }
               - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
           - label: Casos resueltos
@@ -69,6 +79,7 @@ collections:
               - { label: Título público, name: title, widget: string }
               - { label: Fecha de publicación, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
               - { label: Resumen aprobado, name: summary, widget: text }
+              - { label: Detalle ampliado para leer la publicación (opcional), name: details, widget: text, required: false }
               - { label: Imagen autorizada y anonimizada, name: image, widget: image, required: false }
               - { label: Texto alternativo de la imagen, name: imageAlt, widget: string, required: false }
           - label: Videos

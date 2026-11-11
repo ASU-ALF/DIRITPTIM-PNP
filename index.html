@@ -46,6 +46,19 @@ body{background-color:#edf2f7;background-image:linear-gradient(rgba(243,247,250,
 .announcement-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 body.announcement-open{overflow:hidden}
 @media(max-width:620px){.announcement-overlay{padding:14px}.announcement-dialog{padding:26px 22px 22px;max-height:92vh}.announcement-dialog img{max-height:220px}}
+.card-details{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.card-details summary{cursor:pointer;color:var(--navy);font-weight:800;list-style:none}
+.card-details summary::-webkit-details-marker{display:none}
+.card-details summary::after{content:"+";float:right;font-size:20px;line-height:1}
+.card-details[open] summary::after{content:"−"}
+.card-details-body{margin:10px 0 0;white-space:pre-line}
+.whatsapp-float{position:fixed;right:20px;bottom:88px;z-index:9001;display:inline-flex;align-items:center;gap:10px;padding:13px 17px;border:2px solid #fff;border-radius:999px;background:#11865b;color:#fff;box-shadow:0 8px 24px rgba(4,28,20,.28);font-weight:800;text-decoration:none;transition:transform .18s ease,background .18s ease}
+.whatsapp-float:hover{transform:translateY(-2px);background:#0b704a}
+.whatsapp-float:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
+.whatsapp-icon{display:grid;place-items:center;width:34px;height:34px;border:2px solid currentColor;border-radius:50%;font-size:21px;line-height:1}.whatsapp-copy{display:flex;flex-direction:column;gap:3px}.whatsapp-hours{font-size:11px;font-weight:500;opacity:.92}
+.whatsapp-label{font-size:14px;line-height:1.2}
+@media(max-width:620px){.whatsapp-float{right:14px;bottom:82px;padding:11px 13px}.whatsapp-label{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.whatsapp-float{transition:none}}
 </style></head>
 <body><a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="top"><div class="wrap toprow"><a class="brand" href="#inicio" aria-label="DIRITPTIM PNP, inicio"><img class="seal" src="logo-diritptim.png" alt="Emblema DIRITPTIM PNP"><span><strong class="brand-name">DIRITPTIM PNP</strong><small class="brand-sub">Prevención de la trata de personas</small></span></a><nav class="nav" aria-label="Navegación principal"><a href="#reconocer">Reconoce</a><a href="#actua">Actúa</a><a href="#consultas">Consultas</a><a href="#emergencias">Emergencias</a><a href="#casos">Casos</a><a href="#operativos">Operativos</a><a href="#videos">Videos</a><a href="#noticias">Comunicados</a><a href="#preguntas">FAQ</a><a href="#materiales">Materiales</a><a href="#redes">Redes</a><a class="cta" href="#ayuda">Pide orientación</a></nav></div></header>
