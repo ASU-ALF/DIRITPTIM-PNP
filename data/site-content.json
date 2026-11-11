@@ -1,6 +1,6 @@
 {
   "announcement": {
-    "enabled": true,
+    "enabled": false,
     "title": "PRUEBA",
     "message": "ASD",
     "image": "/media/uploads/sssss.png",
@@ -10,13 +10,6 @@
   },
   "news": [],
   "operations": [],
-  "cases": [
-    {
-      "title": "AA",
-      "date": "2026-11-10",
-      "summary": "AAAAAA",
-      "image": "/media/uploads/sssss.png"
-    }
-  ],
+  "cases": [],
   "videos": []
 }
