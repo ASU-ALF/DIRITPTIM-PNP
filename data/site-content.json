@@ -11,5 +11,10 @@
   "news": [],
   "operations": [],
   "cases": [],
-  "videos": []
+  "videos": [],
+  "whatsapp": {
+    "enabled": true,
+    "phone": "+51 943 668 164",
+    "hours": "LUN - DOMINGO 24 HRS"
+  }
 }
