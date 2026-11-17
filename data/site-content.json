@@ -9,7 +9,16 @@
     "buttonUrl": "AA"
   },
   "news": [],
-  "operations": [],
+  "operations": [
+    {
+      "date": "2026-11-17",
+      "title": "dsdadsd",
+      "region": "dsdsds",
+      "summary": "dsdssd",
+      "details": "dsdsd",
+      "imageAlt": "sds"
+    }
+  ],
   "cases": [],
   "videos": [],
   "whatsapp": {
